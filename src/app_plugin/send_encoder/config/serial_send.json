@@ -1,0 +1,6 @@
+{
+  "serial_port": "/dev/gimbal",
+  "baudrate": 115200,
+  "deg_to_rad": 1,
+  "send_enabled": 1
+}

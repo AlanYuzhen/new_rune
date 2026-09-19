@@ -178,13 +178,7 @@ int main(int argc, char const *argv[])
 
     const std::filesystem::path executable_path = std::filesystem::canonical("/proc/self/exe");
     const std::filesystem::path executable_dir = executable_path.parent_path();
-    // 支持通过命令行参数指定运行配置文件名(位于 config/ 下)或绝对路径，
-    // 例如：./app runtime_config_real.json
-    std::string config_arg = (argc >= 2) ? argv[1] : "runtime_config.json";
-    const std::filesystem::path config_path =
-        std::filesystem::path(config_arg).is_absolute()
-            ? std::filesystem::path(config_arg)
-            : executable_dir.parent_path() / "config" / config_arg;
+    const std::filesystem::path config_path = executable_dir.parent_path() / "config" / "runtime_config.json";
     
     const RuntimeConfig runtime_config = read_runtime_config(config_path);
     ImgViz::init(runtime_config.visualize_enabled);

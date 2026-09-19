@@ -1,0 +1,9 @@
+{
+  "serial_port": "/dev/gimbal",
+  "baudrate": 115200,
+  "rad_to_deg": 1,
+  "my_color": 0,
+  "is_start": 1,
+  "is_ready": 1,
+  "publish_hz": 100.0
+}
