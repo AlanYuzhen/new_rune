@@ -140,6 +140,7 @@ void HikCameraManager::capture_loop()
             m_latest_frame = bgr.clone();
             m_latest_ts = std::chrono::steady_clock::now();
             m_frame_ready = true;
+            m_frame_cv.notify_one();
         }
 
         MV_CC_FreeImageBuffer(m_handle, &raw);
@@ -190,14 +191,18 @@ void HikCameraManager::process(const app::Context &context)
     cv::Mat frame;
     std::chrono::steady_clock::time_point ts;
     {
-        std::lock_guard<std::mutex> lk(m_frame_mutex);
-        if (!m_frame_ready)
+        // 等待帧就绪（不 return，因为同线程组的 NNDetector.wait_pop() 会阻塞）
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            return;
+            std::unique_lock<std::mutex> lk(m_frame_mutex);
+            if (!m_frame_ready)
+            {
+                m_frame_cv.wait(lk, [this]{ return m_frame_ready; });
+                if (!m_frame_ready)
+                    return;  // 超时仍无帧，让出一次调度
+            }
+            frame = m_latest_frame.clone();
+            ts = m_latest_ts;
         }
-        frame = m_latest_frame.clone();
-        ts = m_latest_ts;
     }
 
     if ((m_expected_width > 0 && frame.cols != m_expected_width) ||

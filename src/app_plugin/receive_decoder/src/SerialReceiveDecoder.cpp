@@ -96,7 +96,7 @@ ECSData SerialReceiveDecoder::decode(const communication::GimbalToVision &frame)
     d.is_ready = m_default_ready;
 
     // 模式：保持上次作为 fallback
-    d.mode = map_mode(frame.mode, m_latest.mode);
+    d.mode = AimMode::SmallRune;  // 测试版：下位机发mode=1，默认小符
 
     double yaw = frame.yaw;
     double pitch = frame.pitch;

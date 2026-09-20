@@ -3,6 +3,7 @@
 #include <atomic>
 #include <chrono>
 #include <mutex>
+#include <condition_variable>
 #include <optional>
 #include <string>
 #include <thread>
@@ -46,6 +47,7 @@ private:
     std::atomic<bool> m_grabbing{false};
 
     std::mutex m_frame_mutex;
+    std::condition_variable m_frame_cv;
     cv::Mat m_latest_frame;
     std::chrono::steady_clock::time_point m_latest_ts{};
     bool m_frame_ready = false;

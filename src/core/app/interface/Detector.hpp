@@ -14,3 +14,4 @@ inline void Detector::declare(app::Context &context)
     context.declare_input_buffer<InputFrame>(this);
     context.declare_output_buffer<InputFrameWithNNResults>(this);
 }
+
